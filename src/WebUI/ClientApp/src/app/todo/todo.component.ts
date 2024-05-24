@@ -5,7 +5,7 @@ import {
   TodoListsClient, TodoItemsClient,
   TodoListDto, TodoItemDto, PriorityLevelDto,
   CreateTodoListCommand, UpdateTodoListCommand,
-  CreateTodoItemCommand, UpdateTodoItemDetailCommand
+  CreateTodoItemCommand, UpdateTodoItemDetailCommand, ColorDto, 
 } from '../web-api-client';
 
 @Component({
@@ -20,6 +20,7 @@ export class TodoComponent implements OnInit {
   deleteCountDownInterval: any;
   lists: TodoListDto[];
   priorityLevels: PriorityLevelDto[];
+  colors: ColorDto[];
   selectedList: TodoListDto;
   selectedItem: TodoItemDto;
   newListEditor: any = {};
@@ -32,6 +33,7 @@ export class TodoComponent implements OnInit {
     id: [null],
     listId: [null],
     priority: [''],
+    color:[''],
     note: ['']
   });
 
@@ -48,6 +50,7 @@ export class TodoComponent implements OnInit {
       result => {
         this.lists = result.lists;
         this.priorityLevels = result.priorityLevels;
+        this.colors = result.colors;
         if (this.lists.length) {
           this.selectedList = this.lists[0];
         }
@@ -162,6 +165,7 @@ export class TodoComponent implements OnInit {
         }
 
         this.selectedItem.priority = item.priority;
+        this.selectedItem.color = item.color;
         this.selectedItem.note = item.note;
         this.itemDetailsModalRef.hide();
         this.itemDetailsFormGroup.reset();
@@ -175,6 +179,7 @@ export class TodoComponent implements OnInit {
       id: 0,
       listId: this.selectedList.id,
       priority: this.priorityLevels[0].value,
+      color: this.colors[0].value,
       title: '',
       done: false
     } as TodoItemDto;
@@ -182,6 +187,20 @@ export class TodoComponent implements OnInit {
     this.selectedList.items.push(item);
     const index = this.selectedList.items.length - 1;
     this.editItem(item, 'itemTitle' + index);
+  }
+
+  
+
+  getColorName(color: number): string {
+    switch (color) {
+      case 0: return 'white';
+      case 1: return 'red';
+      case 2: return 'green';
+      case 3: return 'blue';
+      case 4: return 'yellow';
+      case 5: return 'orange';
+      default: return 'white';
+    }
   }
 
   editItem(item: TodoItemDto, inputId: string): void {

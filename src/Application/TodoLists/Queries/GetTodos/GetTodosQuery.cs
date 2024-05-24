@@ -29,6 +29,11 @@ public class GetTodosQueryHandler : IRequestHandler<GetTodosQuery, TodosVm>
                 .Select(p => new PriorityLevelDto { Value = (int)p, Name = p.ToString() })
                 .ToList(),
 
+            Colors = Enum.GetValues(typeof(ColorsEnum))
+                .Cast<ColorsEnum>()
+                .Select(p => new ColorDto { Value = (int)p, Name = p.ToString() })
+                .ToList(),
+
             Lists = await _context.TodoLists
                 .AsNoTracking()
                 .ProjectTo<TodoListDto>(_mapper.ConfigurationProvider)
