@@ -853,6 +853,7 @@ export class UpdateTodoItemDetailCommand implements IUpdateTodoItemDetailCommand
     id?: number;
     listId?: number;
     color?: ColorsEnum;
+    tags?: string;
     priority?: PriorityLevel;
     note?: string | undefined;
 
@@ -870,6 +871,7 @@ export class UpdateTodoItemDetailCommand implements IUpdateTodoItemDetailCommand
             this.id = _data["id"];
             this.listId = _data["listId"];
             this.color = _data["color"];
+            this.tags = _data["tags"];
             this.priority = _data["priority"];
             this.note = _data["note"];
         }
@@ -887,6 +889,7 @@ export class UpdateTodoItemDetailCommand implements IUpdateTodoItemDetailCommand
         data["id"] = this.id;
         data["listId"] = this.listId;
         data["color"] = this.color;
+        data["tags"] = this.tags;
         data["priority"] = this.priority;
         data["note"] = this.note;
         return data;
@@ -897,6 +900,7 @@ export interface IUpdateTodoItemDetailCommand {
     id?: number;
     listId?: number;
     color?: ColorsEnum;
+    tags?: string;
     priority?: PriorityLevel;
     note?: string | undefined;
 }
@@ -1087,6 +1091,8 @@ export class TodoItemDto implements ITodoItemDto {
     title?: string | undefined;
     done?: boolean;
     priority?: number;
+    tags?: string;
+    isVisible?: boolean;
     color?: number;
     note?: string | undefined;
 
@@ -1106,6 +1112,8 @@ export class TodoItemDto implements ITodoItemDto {
             this.title = _data["title"];
             this.done = _data["done"];
             this.priority = _data["priority"];
+            this.tags = _data["tags"];
+            this.isVisible = _data["isVisible"];
             this.color = _data["color"];
             this.note = _data["note"];
         }
@@ -1125,6 +1133,8 @@ export class TodoItemDto implements ITodoItemDto {
         data["title"] = this.title;
         data["done"] = this.done;
         data["priority"] = this.priority;
+        data["tags"] = this.tags;
+        data["isVisible"] = this.isVisible;
         data["color"] = this.color;
         data["note"] = this.note;
         return data;
@@ -1137,6 +1147,8 @@ export interface ITodoItemDto {
     title?: string | undefined;
     done?: boolean;
     priority?: number;
+    tags?: string;
+    isVisible?: boolean;
     color?: number;
     note?: string | undefined;
 }

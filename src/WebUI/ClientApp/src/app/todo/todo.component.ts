@@ -29,11 +29,17 @@ export class TodoComponent implements OnInit {
   listOptionsModalRef: BsModalRef;
   deleteListModalRef: BsModalRef;
   itemDetailsModalRef: BsModalRef;
+  allTags: string[] = [];
+  filteredLists: TodoListDto[] = [];
+  topTags: string[] = [];
+  searchTerm: string = '';
+  currentTag: string = '';
   itemDetailsFormGroup = this.fb.group({
     id: [null],
     listId: [null],
     priority: [''],
-    color:[''],
+    color: [''],
+    tags:[''],
     note: ['']
   });
 
@@ -54,9 +60,87 @@ export class TodoComponent implements OnInit {
         if (this.lists.length) {
           this.selectedList = this.lists[0];
         }
+        this.setTrueAllVisibility();
+        this.collectAllTags();
+        this.collectAndCountTags();
       },
       error => console.error(error)
     );
+  }
+
+  collectAllTags(): void {
+    this.allTags = [];
+    if (this.lists) {
+      this.lists.forEach(list => {
+        if (list.items) {
+          list.items.forEach(item => {
+            if (item.tags) {
+              this.allTags = this.allTags.concat(item.tags.split(',').map(tag => tag.trim().toLowerCase()));
+            }
+          });
+        }
+      });
+    }
+    this.allTags = Array.from(new Set(this.allTags));
+  }
+  collectAndCountTags(): void {
+    const tagCount = {};
+
+    if (this.lists) {
+      this.lists.forEach(list => {
+        if (list.items) {
+          list.items.forEach(item => {
+            if (item.tags) {
+              item.tags.split(',').map(tag => tag.trim().toLowerCase()).forEach(tag => {
+                if (tag) {
+                  tagCount[tag] = (tagCount[tag] || 0) + 1;
+                }
+              });
+            }
+          });
+        }
+      });
+    }
+
+    this.allTags = Object.keys(tagCount);
+    this.topTags = this.allTags
+      .sort((a, b) => tagCount[b] - tagCount[a])
+      .slice(0, 3);
+  }
+
+
+  setTrueAllVisibility() {
+    this.lists.forEach(list => {
+      list.items.forEach(item => {
+        item.isVisible = true;
+      });
+    });
+  }
+
+  filterByTag(tag: string): void {
+    const trimmedTag = tag.trim();
+    this.lists.forEach(list => {
+      list.items.forEach(item => {
+        item.isVisible = item.tags && item.tags.split(',').map(t => t.trim()).includes(trimmedTag);
+      });
+    });
+    this.currentTag = tag;
+    this.applyFilters();
+  }
+  searchItems(searchTerm: string): void {
+    this.searchTerm = searchTerm.toLowerCase();
+    this.applyFilters();
+  }
+
+  applyFilters(): void {
+    const trimmedTag = this.currentTag.trim().toLowerCase();
+    this.lists.forEach(list => {
+      list.items.forEach(item => {
+        const matchesTag = !this.currentTag || (item.tags && item.tags.split(',').map(t => t.trim().toLowerCase()).includes(trimmedTag));
+        const matchesSearch = !this.searchTerm || item.title.toLowerCase().includes(this.searchTerm);
+        item.isVisible = matchesTag && matchesSearch;
+      });
+    });
   }
 
   // Lists
@@ -166,6 +250,7 @@ export class TodoComponent implements OnInit {
 
         this.selectedItem.priority = item.priority;
         this.selectedItem.color = item.color;
+        this.selectedItem.tags = item.tags;
         this.selectedItem.note = item.note;
         this.itemDetailsModalRef.hide();
         this.itemDetailsFormGroup.reset();

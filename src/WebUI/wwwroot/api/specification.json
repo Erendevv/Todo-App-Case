@@ -487,6 +487,9 @@
           "color": {
             "$ref": "#/components/schemas/ColorsEnum"
           },
+          "tags": {
+            "type": "string"
+          },
           "priority": {
             "$ref": "#/components/schemas/PriorityLevel"
           },
@@ -616,6 +619,12 @@
           "priority": {
             "type": "integer",
             "format": "int32"
+          },
+          "tags": {
+            "type": "string"
+          },
+          "isVisible": {
+            "type": "boolean"
           },
           "color": {
             "type": "integer",

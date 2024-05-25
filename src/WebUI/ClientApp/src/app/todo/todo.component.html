@@ -5,20 +5,19 @@
 <p *ngIf="!lists"><em>Loading...</em></p>
 
 <div *ngIf="lists">
-
   <div class="row">
     <div class="col-sm-4">
       <div class="clearfix">
         <h2 class="float-start">Lists</h2>
         <button class="btn btn-default float-end" title="New List..."
-          (click)="showNewListModal(newListModalTemplate)">
+                (click)="showNewListModal(newListModalTemplate)">
           <i class="bi bi-journal-plus"></i>
         </button>
       </div>
       <ul class="list-group">
         <li *ngFor="let list of lists; index as i" class="list-group-item"
-          [ngClass]="{ 'active': selectedList == list }" (click)="selectedList = list"
-            >
+            [ngClass]="{ 'active': selectedList == list }"
+            (click)="selectedList = list">
           <div class="clearfix">
             <div class="float-start">
               {{ list.title }}
@@ -32,30 +31,51 @@
     </div>
     <div class="col-sm-8" *ngIf="selectedList">
       <div class="clearfix">
+        <input type="text" class="form-control" placeholder="Search..." [(ngModel)]="searchTerm" (ngModelChange)="applyFilters()">
+        <div *ngIf="topTags.length">
+          <h3>Top Tags:</h3>
+          <ul style="display: flex; justify-content: space-around; flex-direction: row;">
+            <li (click)="filterByTag(tag)" *ngFor="let tag of topTags" style="cursor: pointer; list-style-type: none;">
+              {{ tag }}
+            </li>
+          </ul>
+        </div>
+        <div *ngIf="allTags.length">
+          <h3>All Tags:</h3>
+          <ul style="display: flex; justify-content: space-around; flex-direction: row;">
+            <li (click)="setTrueAllVisibility()" style="cursor: pointer; list-style-type: none;">All</li>
+            <li (click)="filterByTag(tag)" *ngFor="let tag of allTags" style="cursor: pointer; list-style-type:none;">
+              {{ tag }}
+            </li>
+          </ul>
+        </div>
         <h2 class="float-start">{{ selectedList.title }}</h2>
         <button id="listOptions" class="btn btn-default float-end" title="List Options..."
-          (click)="showListOptionsModal(listOptionsModalTemplate)">
+                (click)="showListOptionsModal(listOptionsModalTemplate)">
           <i class="bi bi-three-dots-vertical"></i>
         </button>
       </div>
       <ul id="todo-items" class="list-group mb-2">
-        <li class="list-group-item" *ngFor="let item of selectedList.items; index as i"  [ngStyle]="{'background-color': getColorName(item.color)}" >
+        <li class="list-group-item"
+            *ngFor="let item of selectedList.items; index as i"
+            [ngStyle]="{'background-color': getColorName(item.color)}"
+            [style.display]="item.isVisible ? 'block' : 'none'">
           <div class="d-flex">
             <div class="todo-item-checkbox">
               <input type="checkbox" [(ngModel)]="item.done" (change)="updateItem(item)" />
             </div>
             <div class="flex-fill">
               <input id="{{ 'itemTitle' + i }}" *ngIf="item == selectedItem" type="text"
-                class="form-control item-input-control" [(ngModel)]="item.title" (keyup.enter)="updateItem(item, true)"
-                (blur)="updateItem(item)" autofocus="autofocus" />
+                     class="form-control item-input-control" [(ngModel)]="item.title" (keyup.enter)="updateItem(item, true)"
+                     (blur)="updateItem(item)" autofocus="autofocus" />
               <div class="todo-item-title" *ngIf="item != selectedItem" [ngClass]="{ 'done-todo': item.done }"
-                (click)="editItem(item, 'itemTitle' + i)" class="form-control item-input-control">
+                   (click)="editItem(item, 'itemTitle' + i)" class="form-control item-input-control">
                 <span>{{ item.title }}</span>
               </div>
             </div>
             <div class="todo-item-commands">
               <button *ngIf="item.id != 0" (click)="showItemDetailsModal(itemDetailsModalTemplate, item)"
-                class="btn btn-default btn-xs" role="button">
+                      class="btn btn-default btn-xs" role="button">
                 <i class="bi bi-three-dots-vertical"></i>
               </button>
             </div>
@@ -84,7 +104,7 @@
     <div class="form-group">
       <label for="inputListTitle">Title</label>
       <input type="text" class="form-control" id="inputListTitle" placeholder="List name..."
-        [(ngModel)]="listOptionsEditor.title" (keyup.enter)="updateListOptions()" />
+             [(ngModel)]="listOptionsEditor.title" (keyup.enter)="updateListOptions()" />
     </div>
     <div *ngIf="debug">
       <pre>{{ listOptionsEditor | json }}</pre>
@@ -133,6 +153,10 @@
       <div class="form-group">
         <label for="note">Note</label>
         <textarea id="note" class="form-control" rows="3" formControlName="note"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="tags">Tags</label>
+        <textarea id="tags" class="form-control" rows="3" formControlName="tags"></textarea>
       </div>
     </form>
     <div *ngIf="debug">
@@ -184,7 +208,7 @@
     <div class="form-group">
       <label for="title">Title</label>
       <input type="text" class="form-control" id="title" placeholder="List title..." [(ngModel)]="newListEditor.title"
-        [ngClass]="{ 'is-invalid': newListEditor.error }" (keyup.enter)="addList()" />
+             [ngClass]="{ 'is-invalid': newListEditor.error }" (keyup.enter)="addList()" />
       <div *ngIf="newListEditor.error" class="invalid-feedback">
         {{ newListEditor.error }}
       </div>
