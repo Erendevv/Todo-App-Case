@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Todo_App.Application.Common.Models;
 using Todo_App.Application.TodoItems.Commands.CreateTodoItem;
 using Todo_App.Application.TodoItems.Commands.DeleteTodoItem;
 using Todo_App.Application.TodoItems.Commands.UpdateTodoItem;
 using Todo_App.Application.TodoItems.Commands.UpdateTodoItemDetail;
 using Todo_App.Application.TodoItems.Queries.GetTodoItemsWithPagination;
+using Todo_App.Domain.Entities;
 
 namespace Todo_App.WebUI.Controllers;
 
@@ -55,4 +57,15 @@ public class TodoItemsController : ApiControllerBase
 
         return NoContent();
     }
+    [HttpPost("todo/{id}/softdelete")]
+    public async Task<IActionResult> SoftDeleteTodoItem(int id)
+    {
+        await Mediator.Send(new SoftDeleteTodoItemCommand(id));
+
+        return NoContent();
+    }
+
+
+
+
 }

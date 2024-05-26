@@ -206,6 +206,39 @@
         }
       }
     },
+    "/api/TodoItems/todo/{id}/softdelete": {
+      "post": {
+        "tags": [
+          "TodoItems"
+        ],
+        "operationId": "TodoItems_SoftDeleteTodoItem",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/TodoLists": {
       "get": {
         "tags": [
@@ -624,6 +657,9 @@
             "type": "string"
           },
           "isVisible": {
+            "type": "boolean"
+          },
+          "isDeleted": {
             "type": "boolean"
           },
           "color": {

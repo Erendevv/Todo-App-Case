@@ -78,6 +78,7 @@
                       class="btn btn-default btn-xs" role="button">
                 <i class="bi bi-three-dots-vertical"></i>
               </button>
+              <button class="btn btn-danger btn-sm" (click)="softDeleteItem(item.id); $event.stopPropagation();">Soft Delete</button>
             </div>
           </div>
         </li>

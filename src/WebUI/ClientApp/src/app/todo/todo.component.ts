@@ -54,7 +54,10 @@ export class TodoComponent implements OnInit {
   ngOnInit(): void {
     this.listsClient.get().subscribe(
       result => {
-        this.lists = result.lists;
+        this.lists = result.lists.map(list => {
+          list.items = list.items.filter(item => !item.isDeleted);
+          return list;
+        });
         this.priorityLevels = result.priorityLevels;
         this.colors = result.colors;
         if (this.lists.length) {
@@ -66,6 +69,18 @@ export class TodoComponent implements OnInit {
       },
       error => console.error(error)
     );
+  }
+
+  softDeleteItem(itemId: number): void {
+    this.itemsClient.softDeleteTodoItem(itemId).subscribe(() => {
+      this.lists.forEach(list => {
+        const item = list.items.find(i => i.id === itemId);
+        if (item) {
+          item.isDeleted = true;
+        }
+      });
+      this.applyFilters();
+    });
   }
 
   collectAllTags(): void {
@@ -138,7 +153,7 @@ export class TodoComponent implements OnInit {
       list.items.forEach(item => {
         const matchesTag = !this.currentTag || (item.tags && item.tags.split(',').map(t => t.trim().toLowerCase()).includes(trimmedTag));
         const matchesSearch = !this.searchTerm || item.title.toLowerCase().includes(this.searchTerm);
-        item.isVisible = matchesTag && matchesSearch;
+        item.isVisible = !item.isDeleted && matchesTag && matchesSearch;
       });
     });
   }
