@@ -485,8 +485,34 @@
           "title": {
             "type": "string",
             "nullable": true
+          },
+          "color": {
+            "$ref": "#/components/schemas/ColorsEnum"
+          },
+          "tags": {
+            "type": "string"
           }
         }
+      },
+      "ColorsEnum": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "White",
+          "Red",
+          "Green",
+          "Blue",
+          "Yellow",
+          "Orange"
+        ],
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
       },
       "UpdateTodoItemCommand": {
         "type": "object",
@@ -531,26 +557,6 @@
             "nullable": true
           }
         }
-      },
-      "ColorsEnum": {
-        "type": "integer",
-        "description": "",
-        "x-enumNames": [
-          "White",
-          "Red",
-          "Green",
-          "Blue",
-          "Yellow",
-          "Orange"
-        ],
-        "enum": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5
-        ]
       },
       "PriorityLevel": {
         "type": "integer",

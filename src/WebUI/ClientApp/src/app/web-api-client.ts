@@ -818,6 +818,8 @@ export interface ITodoItemBriefDto {
 export class CreateTodoItemCommand implements ICreateTodoItemCommand {
     listId?: number;
     title?: string | undefined;
+    color?: ColorsEnum;
+    tags?: string;
 
     constructor(data?: ICreateTodoItemCommand) {
         if (data) {
@@ -832,6 +834,8 @@ export class CreateTodoItemCommand implements ICreateTodoItemCommand {
         if (_data) {
             this.listId = _data["listId"];
             this.title = _data["title"];
+            this.color = _data["color"];
+            this.tags = _data["tags"];
         }
     }
 
@@ -846,6 +850,8 @@ export class CreateTodoItemCommand implements ICreateTodoItemCommand {
         data = typeof data === 'object' ? data : {};
         data["listId"] = this.listId;
         data["title"] = this.title;
+        data["color"] = this.color;
+        data["tags"] = this.tags;
         return data;
     }
 }
@@ -853,6 +859,17 @@ export class CreateTodoItemCommand implements ICreateTodoItemCommand {
 export interface ICreateTodoItemCommand {
     listId?: number;
     title?: string | undefined;
+    color?: ColorsEnum;
+    tags?: string;
+}
+
+export enum ColorsEnum {
+    White = 0,
+    Red = 1,
+    Green = 2,
+    Blue = 3,
+    Yellow = 4,
+    Orange = 5,
 }
 
 export class UpdateTodoItemCommand implements IUpdateTodoItemCommand {
@@ -953,15 +970,6 @@ export interface IUpdateTodoItemDetailCommand {
     tags?: string;
     priority?: PriorityLevel;
     note?: string | undefined;
-}
-
-export enum ColorsEnum {
-    White = 0,
-    Red = 1,
-    Green = 2,
-    Blue = 3,
-    Yellow = 4,
-    Orange = 5,
 }
 
 export enum PriorityLevel {
