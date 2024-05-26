@@ -9,6 +9,7 @@ public class TodoItem : BaseAuditableEntity
     public string? Note { get; set; }
     public ColorsEnum Color { get; set; }
     public string Tags { get; set; }
+    public bool IsDeleted { get; set; }
 
     public PriorityLevel Priority { get; set; }
 
